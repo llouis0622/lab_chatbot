@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>LabChatbot</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+
+        #chat {
+            max-width: 600px;
+            margin: auto;
+            height: 400px;
+            overflow-y: auto;
+        }
+
+        .bubble {
+            padding: 8px;
+            margin: 4px;
+            border-radius: 8px;
+        }
+
+        .user {
+            background: #DCF8C6;
+            text-align: right;
+        }
+
+        .bot {
+            background: #F1F0F0;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<div id="chat"></div>
+<input id="msg" placeholder="메시지를 입력하세요" style="width:80%"/>
+<button id="send">전송</button>
+<script>
+    const chat = document.getElementById("chat");
+    const input = document.getElementById("msg");
+    document.getElementById("send").onclick = async () => {
+        const text = input.value.trim();
+        if (!text) return;
+        append(text, "user");
+        input.value = "";
+        const res = await fetch("/api/chat", {
+            method: "POST", headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({text})
+        });
+        const data = await res.json();
+        append(data.reply, "bot");
+    };
+
+    function append(txt, cls) {
+        const d = document.createElement("div");
+        d.className = `bubble ${cls}`;
+        d.innerText = txt;
+        chat.appendChild(d);
+        chat.scrollTop = chat.scrollHeight;
+    }
+</script>
+</body>
+</html>

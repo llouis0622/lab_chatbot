@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  chatbot:
+    build: .
+    volumes:
+      - ./best_model.pt:/app/best_model.pt
+    ports:
+      - "8000:8000"

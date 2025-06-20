@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab-chatbot
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: chatbot }
+  template:
+    metadata:
+      labels: { app: chatbot }
+    spec:
+      containers:
+        - name: chatbot
+          image: your-registry/lab-chatbot:latest
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: model-volume
+              mountPath: /app/best_model.pt
+              subPath: best_model.pt
+      volumes:
+        - name: model-volume
+          hostPath:
+            path: /path/on/node/best_model.pt
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chatbot-svc
+spec:
+  type: ClusterIP
+  selector: { app: chatbot }
+  ports:
+    - port: 80
+      targetPort: 8000

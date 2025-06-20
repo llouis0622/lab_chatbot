@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+torch
+transformers
+tokenizers
+pydantic
+python-multipart
+aiofiles
+PyYAML
+tensorboard
